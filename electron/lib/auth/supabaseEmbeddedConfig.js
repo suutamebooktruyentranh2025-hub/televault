@@ -1,0 +1,5 @@
+const embedded_supabase_url = 'https://eurlodsgnskbqjpxtcsh.supabase.co';
+const embedded_supabase_anon_key =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1cmxvZHNnbnNrYnFqcHh0Y3NoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NDM2MzUsImV4cCI6MjA5MzAxOTYzNX0.cPWu5I1Dw2JhPl5XLgnDv0erJZ0cMjaG1KZLSiXIIPQ';
+
+module.exports = { embedded_supabase_url, embedded_supabase_anon_key };
