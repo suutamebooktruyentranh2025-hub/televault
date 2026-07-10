@@ -1,0 +1,92 @@
+{
+  "name": "televault-desktop",
+  "version": "0.1.0",
+  "description": "TeleVault — kho file cá nhân trên Telegram (desktop)",
+  "main": "electron/main.js",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "npm run test --workspace=@televault/core",
+    "test:all": "npm run test --workspaces --if-present",
+    "postinstall": "electron-rebuild -f -o better-sqlite3",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "prepare-native:mac": "node scripts/prepare-native.js darwin",
+    "prepare-native:win": "node scripts/prepare-native.js win32",
+    "electron:build": "vite build && electron-builder --publish never",
+    "electron:build:mac": "npm run prepare-native:mac && vite build && COPYFILE_DISABLE=1 electron-builder --mac --publish never",
+    "electron:build:win": "npm run prepare-native:win && vite build && electron-builder --win --publish never",
+    "electron:build:all": "npm run prepare-native:mac && vite build && COPYFILE_DISABLE=1 electron-builder --mac --publish never && npm run prepare-native:win && electron-builder --win --publish never"
+  },
+  "build": {
+    "appId": "com.televault.desktop",
+    "productName": "TeleVault",
+    "directories": {
+      "output": "release"
+    },
+    "publish": null,
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "asar": true,
+    "npmRebuild": false,
+    "asarUnpack": [
+      "node_modules/prebuilt-tdlib/**/*",
+      "node_modules/@prebuilt-tdlib/**/*",
+      "node_modules/tdl/**/*",
+      "node_modules/better-sqlite3/**/*"
+    ]
+  },
+  "optionalDependencies": {
+    "@prebuilt-tdlib/win32-x64": "^0.1008065.0"
+  },
+  "dependencies": {
+    "@televault/core": "workspace:*",
+    "better-sqlite3": "^12.11.1",
+    "chokidar": "^5.0.0",
+    "prebuilt-tdlib": "^0.1008065.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tdl": "^8.1.0",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.7.2",
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^9.2.1",
+    "electron": "^34.0.0",
+    "electron-builder": "^24.13.3",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.0.1",
+    "wait-on": "^9.0.4"
+  }
+}
