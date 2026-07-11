@@ -5,3 +5,9 @@ release/
 .env
 .env.local
 *.log
+
+# Superpowers skills
+.agents/
+.agent/
+GEMINI.md
+gemini-extension.json

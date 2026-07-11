@@ -6,6 +6,7 @@
  */
 const { execSync } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 const root = path.resolve(__dirname, '..');
 const electronVersion = require(path.join(root, 'node_modules/electron/package.json')).version;
@@ -30,7 +31,20 @@ function prebuildSqlite(platform, arch) {
 }
 
 if (target === 'win32') {
-  run(`npm install --force --ignore-scripts @prebuilt-tdlib/win32-x64@${tdlibVersion}`);
+  const os = require('os');
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tdlib-win32-'));
+  console.log('Installing win32-x64 to temp dir:', tempDir);
+  run(`npm install --prefix "${tempDir}" --no-save --force --ignore-scripts @prebuilt-tdlib/win32-x64@${tdlibVersion} --os=win32 --cpu=x64`);
+  
+  const destDir = path.join(root, 'node_modules', '@prebuilt-tdlib', 'win32-x64');
+  fs.rmSync(destDir, { recursive: true, force: true });
+  fs.mkdirSync(destDir, { recursive: true });
+  
+  // copy from tempDir
+  const srcDir = path.join(tempDir, 'node_modules', '@prebuilt-tdlib', 'win32-x64');
+  fs.cpSync(srcDir, destDir, { recursive: true });
+  fs.rmSync(tempDir, { recursive: true, force: true });
+
   prebuildSqlite('win32', 'x64');
 } else {
   const arch = process.arch === 'arm64' ? 'arm64' : 'x64';
